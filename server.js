@@ -57,7 +57,7 @@ app.get("/scrape", function (req, res) {
       console.log("one record", href, text)
 
       // // console.log(text)
-      db.Article.create({
+      db.Articles.create({
         title: text,
         link: "https://www.nytimes.com"+ href
       })
