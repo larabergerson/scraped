@@ -35,48 +35,53 @@ app.get("/scrape", function (req, res) {
   axios.get("https://www.theonion.com/").then(function (response) {
     var $ = cheerio.load(response.data);
     console.log("grabbing threads...");
-
+    var onion = $(".theonion");
     // var results = [];
 
-    $(".title").each(function (i, element) {
-        
-      var title = $(element).children("a").text();
-      var summary = $(element).text();
-      var link = $(element).children().attr("href");
-      
-      if (title && link) {
-        db.scrapedData.insert({
-          title: title,
-          summary: summary,
-          link: link
-        },
-          function (err, inserted) {
-            if (err) {
-              console.log(err)
-            }
-            else {
-              console.log(inserted);
-            }
-          });
-      }
-    });
-  });
-  res.send("Scraped web successfully");
-
-});
-app.listen(3000, function () {
-  console.log("App listening on port: 3000");
-});
-
-      
-      // results.push({
-        //   title: title,
-        //   summary: summary,
-        //     link: link
-        //   });
-        // });
-      
-    //     console.log(results);
-    // });
+    console.log(onion.html());
+  
+      // $(".title").each(function (i, element) {
+        $("a .js-link").each(function (i, element) {
     
+        
+        var title = $(element).children("a").text();
+        var summary = $(element).text();
+        var link = $(element).children().attr("href");
+      
+        if (title && link) {
+          db.scrapedData.insert({
+            title: title,
+            summary: summary,
+            link: link
+          },
+            function (err, inserted) {
+              if (err) {
+                console.log(err)
+              }
+              else {
+                console.log(inserted);
+              }
+            });
+        }
+      });
+      res.send("Scraped web successfully");
+  })
+});
 
+
+
+  app.listen(3000, function () {
+    console.log("App listening on port: 3000");
+  });
+
+      
+  //       // results.push({
+  //         //   title: title,
+  //         //   summary: summary,
+  //         //     link: link
+  //         //   });
+  //         // });
+      
+  //     //     console.log(results);
+  //     // });
+    

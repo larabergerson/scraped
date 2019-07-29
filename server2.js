@@ -8,7 +8,7 @@ console.log("\n---------------------------------------\n" +
             "\n---------------------------------------\n");
 
 // Making a request via axios for `nhl.com`'s homepage
-axios.get("https://www.theonion.com/").then(function(response) {
+axios.get("https://www.reddit.com/").then(function(response) {
 
   // Load the body of the HTML into cheerio
   var $ = cheerio.load(response.data);
