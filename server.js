@@ -2,8 +2,12 @@
 
 var express = require("express");
 var mongojs = require("mongojs");
+var mongoose = require("mongoose");
 
 // require Cheerio and Axios to make the web scraping possible:
+
+// Require all models
+var db = require("./models");
 
 var cheerio = require("cheerio");
 var axios = require("axios");
@@ -11,17 +15,14 @@ var axios = require("axios");
 // initialize Express:
 var app = express();
 
-// DB config:
-var databaseUrl = "scraped";
-var collections = ["scrapedData"];
+app.use(express.static("public"));
 
-var db = mongojs(databaseUrl, collections);
-db.on("error", function (error) {
-  console.log("DB ERROR:", error);
-});
+// Connect to the Mongo DB
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
 app.get("/", function (req, res) {
-  db.scrapedData.find({}, function (error, found) {
+  db.scraped.find({}, function (error, found) {
     if (error) {
       console.log(error);
     }
@@ -32,56 +33,44 @@ app.get("/", function (req, res) {
 });
 
 app.get("/scrape", function (req, res) {
-  axios.get("https://www.theonion.com/").then(function (response) {
+  axios.get("https://www.nytimes.com/section/science").then(function (response) {
     var $ = cheerio.load(response.data);
     console.log("grabbing threads...");
-    var onion = $(".theonion");
-    // var results = [];
+    // var onion = $(".theonion");
+    var results = [];
 
-    console.log(onion.html());
-  
-      // $(".title").each(function (i, element) {
-        $("a .js-link").each(function (i, element) {
-    
-        
-        var title = $(element).children("a").text();
-        var summary = $(element).text();
-        var link = $(element).children().attr("href");
-      
-        if (title && link) {
-          db.scrapedData.insert({
-            title: title,
-            summary: summary,
-            link: link
-          },
-            function (err, inserted) {
-              if (err) {
-                console.log(err)
-              }
-              else {
-                console.log(inserted);
-              }
-            });
-        }
-      });
-      res.send("Scraped web successfully");
+    // console.log(onion.html());
+
+    // $(".title").each(function (i, element) {
+    $("div.css-10wtrbd").each(function (i, element) {
+      // console.log(element.children.children)
+
+      var href = $(this)
+        .find("h2")
+        .find("a")
+        .attr("href")
+
+      var text = $(this)
+        .find("h2")
+        .find("a")
+        .text()
+      console.log("one record", href, text)
+
+      // // console.log(text)
+      db.Article.create({
+        title: text,
+        link: "https://www.nytimes.com"+ href
+      })
+      // console.log(results)
+    });
+    res.send("Scraped web successfully");
   })
 });
 
 
 
-  app.listen(3000, function () {
-    console.log("App listening on port: 3000");
-  });
 
-      
-  //       // results.push({
-  //         //   title: title,
-  //         //   summary: summary,
-  //         //     link: link
-  //         //   });
-  //         // });
-      
-  //     //     console.log(results);
-  //     // });
-    
+app.listen(3000, function () {
+  console.log("App listening on port: 3000");
+});
+
