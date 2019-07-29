@@ -18,7 +18,7 @@ var app = express();
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraped";
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
 app.get("/", function (req, res) {
@@ -57,10 +57,10 @@ app.get("/scrape", function (req, res) {
       console.log("one record", href, text)
 
       // // console.log(text)
-      db.Articles.create({
-        title: text,
-        link: "https://www.nytimes.com"+ href
-      })
+      // db.Articles.create({
+      //   title: text,
+      //   link: "https://www.nytimes.com"+ href
+      // })
       // console.log(results)
     });
     res.send("Scraped web successfully");
