@@ -7,7 +7,7 @@ var mongoose = require("mongoose");
 // require Cheerio and Axios to make the web scraping possible:
 
 // Require all models
-var db = require("./models");
+var db = require(".");
 
 var cheerio = require("cheerio");
 var axios = require("axios");

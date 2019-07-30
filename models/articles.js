@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 // Using the Schema constructor, create a new UserSchema object
 
-var ArticlesSchema = new Schema({
+var ArticleSchema = new Schema({
 
   title: {
     type: String,
@@ -23,8 +23,8 @@ var ArticlesSchema = new Schema({
   }
 });
 
-// This creates our model from the above schema, using mongoose's model method
-var Articles = mongoose.model("Articles", ArticlesSchema);
-
+  // This creates our model from the above schema, using mongoose's model method
+var Article = mongoose.model("Articles", ArticleSchema);
+  
 // Export the Article model
-module.exports = Articles;
+module.exports = Article;
