@@ -36,14 +36,14 @@ app.get("/scrape", function (req, res) {
   axios.get("https://www.nytimes.com/section/science").then(function (response) {
     var $ = cheerio.load(response.data);
     console.log("grabbing threads...");
-    // var onion = $(".theonion");
+    // var onion = $(".theonion"); <- wasn't working so changed to NY TIMES - SCIENCE
     var results = [];
 
     // console.log(onion.html());
 
     // $(".title").each(function (i, element) {
     $("div.css-10wtrbd").each(function (i, element) {
-      // console.log(element.children.children)
+      console.log(element.children.children)
 
       var href = $(this)
         .find("h2")
@@ -56,7 +56,7 @@ app.get("/scrape", function (req, res) {
         .text()
       console.log("one record", href, text)
 
-      // // console.log(text)
+      // console.log(text)
       // db.Articles.create({
       //   title: text,
       //   link: "https://www.nytimes.com"+ href
